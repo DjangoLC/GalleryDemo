@@ -1,7 +1,8 @@
-package mobrsg.android.redsinergia.gallerydemo;
+package mobrsg.android.redsinergia.gallerydemo.api;
 
 import java.util.List;
 
+import mobrsg.android.redsinergia.gallerydemo.models.PhotoGallery;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -16,6 +17,6 @@ public interface ApiCalls {
 
     @GET("photos")
     Call<List<PhotoGallery>> getPhotos(@Query("page") Integer page, @Query("per_page") Integer perPage,
-                                @Query("order_by") String orderBy);
+                                       @Query("order_by") String orderBy);
 
 }

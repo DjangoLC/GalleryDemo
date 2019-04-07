@@ -1,4 +1,4 @@
-package mobrsg.android.redsinergia.gallerydemo;
+package mobrsg.android.redsinergia.gallerydemo.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import mobrsg.android.redsinergia.gallerydemo.R;
+import mobrsg.android.redsinergia.gallerydemo.models.PhotoGallery;
 
 
 /*
