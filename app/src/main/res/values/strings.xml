@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GalleryDemo</string>
+    <string name="error_message">Algo salio mal, por favor revisa el logcat</string>
+</resources>
