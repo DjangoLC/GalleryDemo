@@ -10,11 +10,23 @@ import mobrsg.android.redsinergia.gallerydemo.models.PhotoGallery;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.security.ProviderInstaller;
+
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 
 
 /*
@@ -31,10 +43,12 @@ import java.util.List;
  *
  * */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ProviderInstaller.ProviderInstallListener {
 
     private ApiCalls apiPhotos;
     private PhotoGalleryAdapter adapter;
+
+    private static final int ERROR_DIALOG_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
          * de darte los objetos para que accedas normalmente a ellos esto gracias a gson
          * */
 
+        ProviderInstaller.installIfNeededAsync(this, this);
+
         apiPhotos = new RetrofitAdapter().getInstance().create(ApiCalls.class);
         adapter = new PhotoGalleryAdapter();
 
@@ -57,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.mRecyclerPhotos);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-        getPhotos();
 
     }
 
@@ -84,6 +98,47 @@ public class MainActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
 
+    @Override
+    public void onProviderInstalled() {
+        SSLContext sslContext = null;
+        try {
+            sslContext = SSLContext.getInstance("TLSv1.2");
+            sslContext.init(null, null, null);
+            SSLEngine engine = sslContext.createSSLEngine();
+
+            getPhotos();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onProviderInstallFailed(int errorCode, Intent intent) {
+        if (GooglePlayServicesUtil.isUserRecoverableError(errorCode)) {
+            // Recoverable error. Show a dialog prompting the user to
+            // install/update/enable Google Play services.
+            GooglePlayServicesUtil.showErrorDialogFragment(
+                    errorCode,
+                    this,
+                    ERROR_DIALOG_REQUEST_CODE,
+                    new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            // The user chose not to take the recovery action
+                            onProviderInstallerNotAvailable();
+                        }
+                    });
+        } else {
+            // Google Play services is not available.
+            onProviderInstallerNotAvailable();
+        }
+    }
+
+    private void onProviderInstallerNotAvailable() {
     }
 }
