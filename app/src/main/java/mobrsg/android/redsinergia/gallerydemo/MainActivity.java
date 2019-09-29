@@ -126,12 +126,9 @@ public class MainActivity extends AppCompatActivity implements ProviderInstaller
                     errorCode,
                     this,
                     ERROR_DIALOG_REQUEST_CODE,
-                    new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            // The user chose not to take the recovery action
-                            onProviderInstallerNotAvailable();
-                        }
+                    dialog -> {
+                        // The user chose not to take the recovery action
+                        onProviderInstallerNotAvailable();
                     });
         } else {
             // Google Play services is not available.
@@ -140,5 +137,6 @@ public class MainActivity extends AppCompatActivity implements ProviderInstaller
     }
 
     private void onProviderInstallerNotAvailable() {
+
     }
 }
