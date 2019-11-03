@@ -8,8 +8,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.OkHttpClient
 
-
-
 class RetrofitAdapter {
 
     fun getInstance(): Retrofit {
@@ -18,6 +16,7 @@ class RetrofitAdapter {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         val client = OkHttpClient.Builder()
+                .addInterceptor(logging)
                 .addInterceptor(invoke {
                     var request = it.request()
                     request = request.newBuilder()
